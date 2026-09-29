@@ -1,0 +1,204 @@
+.pb-sidebar {
+    height: 100%;
+    position: sticky;
+    top: 0;
+    overflow-y: auto;
+    background: var(--surface-color);
+    flex-shrink: 0;
+}
+
+.pb-sidebar-left {
+    width: var(--sidebar-width);
+}
+
+// Search
+.pb-sidebar-search-wrapper {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px;
+    background: inherit;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.pb-sidebar-search-icon {
+    flex-shrink: 0;
+    color: var(--text-muted-color);
+}
+
+.pb-sidebar-search {
+    flex: 1;
+    min-width: 0;
+    background: transparent;
+    font-size: 13px;
+    color: var(--text-color);
+}
+
+.pb-sidebar-search::placeholder {
+    color: var(--text-muted-color);
+}
+
+// Contextual restriction hint (shown when the current selection limits
+// which components can be added — e.g. a selected Row only allows Columns)
+.pb-sidebar-context-hint {
+    margin: 0;
+    padding: 10px 12px;
+    font-size: 11px;
+    line-height: 1.4;
+    color: var(--text-muted-color);
+    background: var(--surface-hover-color);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.pb-sidebar-context-hint strong {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+// Empty state
+.pb-sidebar-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 48px 16px;
+    text-align: center;
+    color: var(--text-muted-color);
+}
+
+.pb-sidebar-empty p {
+    margin: 0;
+    font-size: 13px;
+}
+
+// Feature group
+.pb-sidebar-feature {
+    padding: 12px;
+}
+
+.pb-sidebar-feature + .pb-sidebar-feature {
+    border-top: 1px solid var(--border-color);
+}
+
+.pb-sidebar-feature-title {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--text-muted-color);
+    margin: 0 0 10px;
+}
+
+.pb-sidebar-feature-items {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+// Feature item card
+.pb-sidebar-feature-item {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 12px 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--surface-color);
+    cursor: pointer;
+    transition: border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.pb-sidebar-feature-item:hover,
+.pb-sidebar-feature-item:focus-within {
+    border-color: var(--primary-color);
+    background: var(--surface-hover-color);
+}
+
+.pb-sidebar-feature-item:hover .pb-sidebar-drag-handle,
+.pb-sidebar-feature-item:focus-within .pb-sidebar-drag-handle,
+.pb-sidebar-feature-item:hover .pb-sidebar-fav-btn,
+.pb-sidebar-feature-item:focus-within .pb-sidebar-fav-btn {
+    opacity: 1;
+}
+
+.pb-sidebar-feature-item:hover .pb-sidebar-feature-item-icon,
+.pb-sidebar-feature-item:focus-within .pb-sidebar-feature-item-icon {
+    color: var(--primary-color);
+}
+
+.pb-sidebar-feature-item:active {
+    background: var(--surface-active-color);
+}
+
+.pb-sidebar-feature-item.active {
+    border-color: var(--primary-color);
+    background: var(--surface-active-color);
+    box-shadow: 0 0 0 1px var(--primary-color);
+}
+
+.pb-sidebar-feature-item.active .pb-sidebar-feature-item-icon {
+    color: var(--primary-color);
+}
+
+.pb-sidebar-drag-handle {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    opacity: 0;
+    cursor: grab;
+    transition: opacity 0.15s ease;
+}
+
+.pb-sidebar-feature-item-icon {
+    color: var(--text-muted-color);
+    transition: color 0.15s ease;
+}
+
+.pb-sidebar-feature-item-title {
+    font-size: 12px;
+    font-weight: 500;
+    text-align: center;
+    margin: 0;
+}
+
+.pb-sidebar-fav-btn {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    padding: 0;
+    border-radius: 4px;
+    background: transparent;
+    color: var(--text-muted-color);
+    opacity: 0;
+    cursor: pointer;
+    transition: opacity 0.15s ease, color 0.15s ease, background-color 0.15s ease;
+}
+
+.pb-sidebar-fav-btn:hover {
+    background: var(--surface-hover-color);
+    color: var(--primary-color);
+}
+
+// Favorited items keep their pin visible without needing hover
+.pb-sidebar-fav-btn[data-favorited="true"] {
+    opacity: 1;
+    color: var(--primary-color);
+}

@@ -1,0 +1,163 @@
+@use "../utils/mixins" as *;
+
+.pb-shell {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.pb-export-bar {
+    @include flex-between;
+    flex-shrink: 0;
+    padding: 10px 16px;
+    background: var(--secondary-color);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.pb-export-bar-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--surface-color);
+    letter-spacing: 0.02em;
+}
+
+.pb-export-bar-btn {
+    @include flex-center;
+    @include focus-ring;
+    gap: 6px;
+    padding: 7px 14px;
+    background: var(--primary-color);
+    color: var(--surface-color);
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.pb-export-bar-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.pb-main {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+}
+
+.pb-content {
+    background-color: var(--tertiary-color);
+    flex-grow: 1;
+    overflow-y: auto;
+}
+
+.pb-canvas {
+    min-height: 100%;
+    padding: 24px;
+}
+
+.pb-drop-zone {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.pb-drop-row {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.pb-canvas-empty {
+    flex: 1;
+    @include flex-center;
+    flex-direction: column;
+    text-align: center;
+    color: var(--text-muted-color);
+    font-size: 13px;
+    border: 1px dashed var(--border-color);
+    border-radius: 8px;
+    padding: 48px 16px;
+}
+
+// Clear drop-position indicator: a glowing line rendered exactly where the
+// dragged item will land, instead of an ambiguous border-top on the target.
+.pb-drop-line {
+    height: 3px;
+    border-radius: 999px;
+    background: var(--primary-color);
+    box-shadow: 0 0 0 3px var(--surface-hover-color);
+    animation: pb-drop-line-pulse 1s ease-in-out infinite;
+}
+
+.pb-drop-line-empty {
+    margin: 4px 0;
+}
+
+@keyframes pb-drop-line-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.45; }
+}
+
+.pb-drop-zone-empty.pb-drop-zone-active .pb-canvas-empty {
+    border-color: var(--primary-color);
+    background: var(--surface-hover-color);
+    color: var(--primary-color);
+}
+
+.pb-canvas-item {
+    position: relative;
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    cursor: grab;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.pb-canvas-item:hover {
+    border-color: var(--border-strong-color);
+}
+
+.pb-canvas-item.selected {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 1px var(--primary-color);
+}
+
+.pb-canvas-item.pb-container {
+    background: var(--surface-hover-color);
+}
+
+.pb-canvas-item-toolbar {
+    @include flex-between;
+    padding: 6px 10px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.pb-canvas-item-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--text-muted-color);
+}
+
+.pb-canvas-item-remove {
+    @include flex-center;
+    @include focus-ring;
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    color: var(--text-muted-color);
+}
+
+.pb-canvas-item-remove:hover {
+    background: var(--surface-hover-color);
+    color: var(--primary-color);
+}
+
+.pb-canvas-item-body {
+    padding: 12px;
+}
+
+.pb-container > .pb-drop-zone {
+    padding: 0 12px 12px;
+}

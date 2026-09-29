@@ -1,0 +1,285 @@
+@import './toolbar.scss';
+
+:root {
+    --color-primary: #4A72AA;
+    --color-primary-hover: #346096;
+
+    --color-secondary: #121929;
+
+    --color-titles: #223354;
+    --color-text: #333;
+
+    --color-background: #F9F8F8;
+    --color-card: #ffffff;
+    --color-divider: #B6BACF;
+    --color-disabled: #9FA4C4;
+
+    --color-border: #E5E5E5;
+    --color-border-light: #DFE2F2;
+
+    --navbar-height: 5rem;
+}
+
+.Editor {
+    max-width: 100%;
+    width: 100%;
+    margin: 0 auto;
+    // position: sticky;
+    // top: var(--navbar-height);
+
+    &-container {
+        background: var(--color-card);
+        box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        border: 0.0625rem solid var(--color-border);
+        position: relative;
+    }
+
+    &Toolbar {
+        display: flex;
+        align-items: center;
+        padding: 0.75rem 0.5rem;
+        background: var(--color-background);
+        border-bottom: 0.0625rem solid var(--color-border);
+        gap: 0.25rem;
+        flex-wrap: wrap;
+        position: sticky;
+        z-index: 2;
+        top: 0;
+
+        &-group {
+            display: flex;
+            gap: 0.25rem;
+        }
+
+        &-divider {
+            width: 0.0625rem;
+            height: 1.5rem;
+            background: var(--color-divider);
+            margin: 0 0.25rem;
+        }
+
+        &-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.25rem;
+            height: 2.25rem;
+            border: none;
+            background: transparent;
+            color: var(--color-text);
+            border-radius: 0.25rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 600;
+            font-size: 0.875rem;
+
+            &:hover {
+                background: var(--color-border-light);
+            }
+
+            &--active {
+                background: var(--color-primary);
+                color: white;
+
+                &:hover {
+                    background: var(--color-primary-hover);
+                }
+            }
+
+            &:disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
+
+                &:hover {
+                    background: transparent;
+                }
+            }
+        }
+    }
+
+    &-contentWrapper {
+        position: relative;
+        background: var(--color-card);
+        max-height: calc(100vh - 8rem);
+        overflow-y: auto;
+        z-index: 1;
+    }
+
+    &-content {
+        min-height: 25rem;
+        padding: 1.5rem;
+        outline: none;
+        font-size: 1rem;
+        line-height: 1.6;
+        color: var(--color-text);
+    }
+
+    &-placeholder {
+        position: absolute;
+        top: 1.5rem;
+        inset-inline-start: 1.5rem;
+        color: var(--color-disabled);
+        pointer-events: none;
+        font-size: 1rem;
+    }
+
+    &-footer {
+        padding: 0.5rem 0.75rem;
+        background-color: var(--color-background);
+        border-top: 0.0625rem solid var(--color-border);
+        font-size: 0.8125rem;
+        color: var(--color-disabled);
+    }
+
+    &-wordCount {
+        text-align: right;
+    }
+
+    // RTL/LTR Direction Support
+    &-rtl {
+        direction: rtl;
+        text-align: right;
+    }
+
+    &-ltr {
+        direction: ltr;
+        text-align: left;
+    }
+}
+
+// Source Editor Overlay
+.source-editor-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--color-card);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+
+    &-header {
+        padding: 0.75rem;
+        border-bottom: 0.0625rem solid var(--color-border);
+        background-color: var(--color-background);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        h3 {
+            margin: 0;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--color-titles);
+        }
+
+        button {
+            padding: 0.5rem 1rem;
+            background-color: var(--color-primary);
+            color: white;
+            border: none;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: background-color 0.2s;
+
+            &:hover {
+                background-color: var(--color-primary-hover);
+            }
+
+            &:active {
+                transform: scale(0.98);
+            }
+        }
+    }
+
+    textarea {
+        flex: 1;
+        padding: 1rem;
+        font-family: 'Courier New', Monaco, monospace;
+        font-size: 0.875rem;
+        border: none;
+        outline: none;
+        resize: none;
+        background: var(--color-card);
+        color: var(--color-text);
+        line-height: 1.5;
+        tab-size: 2;
+    }
+}
+
+// Responsive Adjustments
+@media only screen and (max-width: 900px) {
+    .Editor {
+        &-content {
+            padding: 1rem;
+            min-height: 20rem;
+        }
+
+        &-placeholder {
+            top: 1rem;
+            left: 1rem;
+        }
+
+        &Toolbar {
+            padding: 0.5rem 0.25rem;
+
+            &-button {
+                width: 2rem;
+                height: 2rem;
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .Editor {
+        position: relative;
+        top: 0;
+
+        &-content {
+            min-height: 15rem;
+            font-size: 0.9375rem;
+        }
+
+        &Toolbar {
+            gap: 0.125rem;
+
+            &-divider {
+                margin: 0 0.125rem;
+            }
+        }
+    }
+
+}
+
+// Print Styles
+@media print {
+
+    .EditorToolbar,
+    .Editor-footer,
+    .source-editor-overlay {
+        display: none !important;
+    }
+
+    .Editor-container {
+        box-shadow: none;
+        border: none;
+    }
+
+    .iframe-wrapper iframe {
+        display: none;
+    }
+
+    .iframe-wrapper::after {
+        content: "Embedded content not available in print";
+        display: block;
+        padding: 1rem;
+        text-align: center;
+        color: var(--color-disabled);
+        border: 0.0625rem dashed var(--color-border);
+    }
+}

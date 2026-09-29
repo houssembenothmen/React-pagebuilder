@@ -1,0 +1,93 @@
+import { EditorConfig, ResolvedEditorConfig } from "./editorConfigTypes";
+
+export const DEFAULT_EDITOR_CONFIG: ResolvedEditorConfig = {
+    media: {
+        images: true,
+        albums: true,
+        videos: true,
+        pdf: true,
+        iframe: true,
+        externalStorage: false,
+        storageURL: "",
+        uploadEndpoint: "api/bo/content/upload/media",
+        listEndpoint: "api/bo/content/upload/media",
+        uploadToken: "",
+        maxAlbumImages: 20,
+        maxImageDimension: 1200,
+        responseFilePaths: ["url", "media"],
+        responseListPaths: ["medias", "media", "items", "data"],
+    },
+    texts: {
+        bold: true,
+        italic: true,
+        underline: true,
+        strikethrough: true,
+        fontFamily: true,
+        fontSize: true,
+        color: true,
+        backgroundColor: true,
+        alignment: true,
+        headings: true,
+        lists: true,
+        quote: true,
+        link: true,
+        direction: true,
+        markdownShortcuts: true,
+        fontFamilies: [],
+        fontSizes: [],
+        headingLevels: [1, 2, 3, 4, 5, 6],
+        colorPresets: [],
+    },
+    history: {
+        undo: true,
+        redo: true,
+    },
+    features: {
+        sourceEditor: true,
+        wordCount: true,
+        autoFocus: true,
+    },
+    theme: {
+        namespace: "NREditor",
+        colors: {
+            primary: "#4A72AA",
+            primaryHover: "#346096",
+            secondary: "#121929",
+            titles: "#223354",
+            text: "#333",
+            background: "#F9F8F8",
+            card: "#ffffff",
+            divider: "#B6BACF",
+            disabled: "#9FA4C4",
+            border: "#E5E5E5",
+            borderLight: "#DFE2F2",
+        },
+        darkColors: {
+            primary: "#5A8FD8",
+            primaryHover: "#4A7FCA",
+            secondary: "#e0e0e0",
+            titles: "#f0f0f0",
+            text: "#e0e0e0",
+            background: "#1e1e1e",
+            card: "#2a2a2a",
+            divider: "#4a4a4a",
+            disabled: "#6a6a6a",
+            border: "#3a3a3a",
+            borderLight: "#505050",
+        },
+    },
+};
+
+export function mergeEditorConfig(userConfig?: EditorConfig): ResolvedEditorConfig {
+    return {
+        media: { ...DEFAULT_EDITOR_CONFIG.media, ...userConfig?.media },
+        texts: { ...DEFAULT_EDITOR_CONFIG.texts, ...userConfig?.texts },
+        history: { ...DEFAULT_EDITOR_CONFIG.history, ...userConfig?.history },
+        features: { ...DEFAULT_EDITOR_CONFIG.features, ...userConfig?.features },
+        theme: {
+            namespace: userConfig?.theme?.namespace ?? DEFAULT_EDITOR_CONFIG.theme.namespace,
+            colors: { ...DEFAULT_EDITOR_CONFIG.theme.colors, ...userConfig?.theme?.colors },
+            darkColors: { ...DEFAULT_EDITOR_CONFIG.theme.darkColors, ...userConfig?.theme?.darkColors },
+        },
+    };
+}

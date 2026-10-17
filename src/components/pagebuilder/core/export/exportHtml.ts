@@ -3,6 +3,8 @@ import type { CanvasComponent } from "../types";
 import { componentRegistry } from "../registry";
 import { CORE_EXPORT_CSS } from "./exportStyles";
 import { layoutToCssString } from "../utils/layoutStyle";
+import type { PageSettings } from "../page";
+import { computePageStyles, declsToString } from "../page";
 
 const renderNode = (node: CanvasComponent): string => {
     const def = componentRegistry.get(node.title);
@@ -21,7 +23,13 @@ const renderNode = (node: CanvasComponent): string => {
     return `<div class="pb-el-layout-wrap" style="${layoutCss}">${html}</div>`;
 };
 
-export function buildExportHtml(items: CanvasComponent[]): string {
+export function buildExportHtml(
+    items: CanvasComponent[],
+    page?: PageSettings,
+): string {
+    const { frame, flow } = computePageStyles(page?.props, page?.layout);
+    const pageStyle = declsToString({ ...flow, ...frame }); // frame last, so layout overrides flow
+
     const body = items.map(renderNode).join("\n");
 
     // Only collect JS from components actually present on the page — no
@@ -50,7 +58,7 @@ export function buildExportHtml(items: CanvasComponent[]): string {
 ${componentRegistry.allCss()}</style>
 </head>
 <body>
-<div class="pb-export">
+<div class="pb-export" style="${pageStyle}">
 ${body}
 </div>
 ${js ? `<script>${js}</script>` : ""}

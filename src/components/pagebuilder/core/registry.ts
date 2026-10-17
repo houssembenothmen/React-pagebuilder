@@ -1,36 +1,48 @@
 import type { ComponentDefinition } from "./types";
 
-const eraseDefinition = <P,>(def: ComponentDefinition<P>): ComponentDefinition =>
+const eraseDefinition = <P>(def: ComponentDefinition<P>): ComponentDefinition =>
     def as unknown as ComponentDefinition;
 
 class ComponentRegistry {
     private defs = new Map<string, ComponentDefinition>();
     private listeners = new Set<() => void>();
 
-    register = <P,>(def: ComponentDefinition<P>) => {
+    register = <P>(def: ComponentDefinition<P>) => {
         if (!def) {
-            console.error(`[page-builder] register() called with an undefined/null definition.`);
+            console.error(
+                `[page-builder] register() called with an undefined/null definition.`,
+            );
             return;
         }
         if (!def.icon) {
-            console.error(`[page-builder] Component "${def.title ?? "(no title)"}" is missing an icon.`, def);
+            console.error(
+                `[page-builder] Component "${def.title ?? "(no title)"}" is missing an icon.`,
+                def,
+            );
         }
         if (!def.title) {
-            console.error(`[page-builder] Component definition is missing a title:`, def);
+            console.error(
+                `[page-builder] Component definition is missing a title:`,
+                def,
+            );
         }
 
         const erased = eraseDefinition(def);
         if (this.defs.has(erased.title)) {
-            console.warn(`[page-builder] "${erased.title}" is already registered — overwriting.`);
+            console.warn(
+                `[page-builder] "${erased.title}" is already registered — overwriting.`,
+            );
         }
         this.defs.set(erased.title, erased);
         this.listeners.forEach((l) => l());
     };
 
-    registerAll = <P,>(defs: ComponentDefinition<P>[]) =>
+    registerAll = <P>(defs: ComponentDefinition<P>[]) =>
         defs.forEach((d, i) => {
             if (!d) {
-                console.error(`[page-builder] registerAll() received an undefined/null definition at index ${i}.`);
+                console.error(
+                    `[page-builder] registerAll() received an undefined/null definition at index ${i}.`,
+                );
                 return;
             }
             this.register(d);
@@ -41,11 +53,16 @@ class ComponentRegistry {
         this.listeners.forEach((l) => l());
     };
 
-    get = (title: string): ComponentDefinition | undefined => this.defs.get(title);
+    get = (title: string): ComponentDefinition | undefined =>
+        this.defs.get(title);
 
     getAll = (): ComponentDefinition[] => [...this.defs.values()];
 
-    getByGroup = (): { group: string; groupLabelKey?: string; items: ComponentDefinition[] }[] => {
+    getByGroup = (): {
+        group: string;
+        groupLabelKey?: string;
+        items: ComponentDefinition[];
+    }[] => {
         const order: string[] = [];
         const map = new Map<string, ComponentDefinition[]>();
         for (const def of this.defs.values()) {
@@ -70,7 +87,11 @@ class ComponentRegistry {
         };
     };
 
-    allCss = (): string => [...this.defs.values()].map((d) => d.css ?? "").join("\n");
+    allCss = (): string =>
+        [...this.defs.values()]
+            .map((d) => d.css)
+            .filter(Boolean)
+            .join("\n");
 }
 
 export const componentRegistry = new ComponentRegistry();

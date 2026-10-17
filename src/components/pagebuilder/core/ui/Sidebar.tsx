@@ -18,7 +18,8 @@ const Sidebar = () => {
     const containerDef = selectedContainerForInsert ? componentRegistry.get(selectedContainerForInsert.title) : null;
     const allowedTitles = containerDef?.allowedChildren ? new Set(containerDef.allowedChildren) : null;
 
-    const isAllowed = (def: ComponentDefinition): boolean => !allowedTitles || allowedTitles.has(def.title);
+const isAllowed = (def: ComponentDefinition): boolean =>
+    !def.hidden && (!allowedTitles || allowedTitles.has(def.title));
 
     const toggleFavorite = (e: MouseEvent<HTMLButtonElement>, title: string) => {
         e.stopPropagation();

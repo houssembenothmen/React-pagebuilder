@@ -52,6 +52,7 @@ export interface ComponentDefinition<P = Record<string, unknown>> {
     js?: string;
     /** Opt-in flag: only components that set this get the Typography section in settings. */
     supportsTypography?: boolean;
+    hidden?: boolean;
 }
 
 // ---------------------------------------------------------------------------
@@ -147,4 +148,5 @@ export interface LayoutStyle {
     overflow?: OverflowValue;
     transform?: string;
     cursor?: CursorValue;
+    
 }

@@ -74,6 +74,7 @@ import PricingTable from "../../library/advanced/pricing-table";
 import ProductCard from "../../library/advanced/product-card";
 import CartButton from "../../library/advanced/cart-button";
 import Notification from "../../library/advanced/notification";
+import { PAGE_ROOT_ID, createPageNode } from "../page";
 
 interface PageBuilderContextValue {
     canvasItems: CanvasComponent[];
@@ -81,6 +82,7 @@ interface PageBuilderContextValue {
     selectedComponent: CanvasComponent | null;
     selectedContainerForInsert: CanvasComponent | null;
     selectedInsertIndex: number | undefined;
+    page: CanvasComponent;
     addComponent: (
         title: string,
         parentId?: string | null,
@@ -264,10 +266,28 @@ const isDescendant = (node: CanvasComponent, id: string): boolean => {
     );
 };
 
+const updateLayout = (
+    nodes: CanvasComponent[],
+    id: string,
+    patch: Partial<LayoutStyle>,
+): CanvasComponent[] =>
+    nodes.map((node) => {
+        if (node.id === id)
+            return { ...node, layout: { ...node.layout, ...patch } };
+        if (node.children)
+            return {
+                ...node,
+                children: updateLayout(node.children, id, patch),
+            };
+        return node;
+    });
+
 export const PageBuilderProvider = ({ children }: { children: ReactNode }) => {
     const [canvasItems, setCanvasItems] = useState<CanvasComponent[]>([]);
-    const [selectedId, setSelectedId] = useState<string | null>(null);
     const [exportedHtml, setExportedHtml] = useState<string | null>(null);
+
+    const [page, setPage] = useState<CanvasComponent>(createPageNode);
+    const [selectedId, setSelectedId] = useState<string | null>(PAGE_ROOT_ID);
 
     const addComponent = useCallback(
         (title: string, parentId: string | null = null, index?: number) => {
@@ -293,32 +313,21 @@ export const PageBuilderProvider = ({ children }: { children: ReactNode }) => {
         [],
     );
 
-    const updateLayout = (
-        nodes: CanvasComponent[],
-        id: string,
-        patch: Partial<LayoutStyle>,
-    ): CanvasComponent[] =>
-        nodes.map((node) => {
-            if (node.id === id)
-                return { ...node, layout: { ...node.layout, ...patch } };
-            if (node.children)
-                return {
-                    ...node,
-                    children: updateLayout(node.children, id, patch),
-                };
-            return node;
-        });
-
     const updateComponentLayout = useCallback(
         (id: string, patch: Partial<LayoutStyle>) => {
+            if (id === PAGE_ROOT_ID) {
+                setPage((p) => ({ ...p, layout: { ...p.layout, ...patch } }));
+                return;
+            }
             setCanvasItems((prev) => updateLayout(prev, id, patch));
         },
         [],
     );
 
     const removeComponent = useCallback((id: string) => {
+        if (id === PAGE_ROOT_ID) return; // the page can't be deleted
         setCanvasItems((prev) => removeNode(prev, id).nodes);
-        setSelectedId((prev) => (prev === id ? null : prev));
+        setSelectedId((prev) => (prev === id ? PAGE_ROOT_ID : prev));
     }, []);
 
     const moveComponent = useCallback(
@@ -340,6 +349,10 @@ export const PageBuilderProvider = ({ children }: { children: ReactNode }) => {
 
     const updateComponentProps = useCallback(
         (id: string, props: Record<string, unknown>) => {
+            if (id === PAGE_ROOT_ID) {
+                setPage((p) => ({ ...p, props: { ...p.props, ...props } }));
+                return;
+            }
             setCanvasItems((prev) => updateNode(prev, id, props));
         },
         [],
@@ -351,14 +364,19 @@ export const PageBuilderProvider = ({ children }: { children: ReactNode }) => {
     );
 
     const exportAsHtml = useCallback((): string => {
-        const html = buildExportHtml(canvasItems);
+        const html = buildExportHtml(canvasItems, page);
         setExportedHtml(html);
         return html;
-    }, [canvasItems]);
+    }, [canvasItems, page]);
 
     const selectedComponent = useMemo(
-        () => (selectedId ? findNode(canvasItems, selectedId) : null),
-        [canvasItems, selectedId],
+        () =>
+            selectedId === PAGE_ROOT_ID
+                ? page
+                : selectedId
+                  ? findNode(canvasItems, selectedId)
+                  : null,
+        [canvasItems, selectedId, page],
     );
 
     const selectedParentInfo = useMemo(
@@ -390,12 +408,13 @@ export const PageBuilderProvider = ({ children }: { children: ReactNode }) => {
             selectedComponent,
             selectedContainerForInsert,
             selectedInsertIndex,
+            page,
             addComponent,
             removeComponent,
             moveComponent,
             selectComponent,
             updateComponentProps,
-            updateComponentLayout, // <-- add here
+            updateComponentLayout,
             exportedHtml,
             exportAsHtml,
         }),
@@ -405,12 +424,13 @@ export const PageBuilderProvider = ({ children }: { children: ReactNode }) => {
             selectedComponent,
             selectedContainerForInsert,
             selectedInsertIndex,
+            page,
             addComponent,
             removeComponent,
             moveComponent,
             selectComponent,
             updateComponentProps,
-            updateComponentLayout, // <-- and here
+            updateComponentLayout,
             exportedHtml,
             exportAsHtml,
         ],

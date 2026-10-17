@@ -1,14 +1,19 @@
+// core/StyleInjector.tsx
 "use client";
 
 import { useEffect, useState } from "react";
 import { componentRegistry } from "./registry";
 
 const StyleInjector = () => {
-    const [, forceUpdate] = useState(0);
+    const [css, setCss] = useState("");
 
-    useEffect(() => componentRegistry.subscribe(() => forceUpdate((n) => n + 1)), []);
+    useEffect(() => {
+        const update = () => setCss(componentRegistry.allCss());
+        update();
+        return componentRegistry.subscribe(update);
+    }, []);
 
-    return <style id="pb-component-styles">{componentRegistry.allCss()}</style>;
+    return <style id="pb-component-styles" suppressHydrationWarning>{css}</style>;
 };
 
 export default StyleInjector;

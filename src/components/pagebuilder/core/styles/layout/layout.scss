@@ -161,3 +161,28 @@
 .pb-container > .pb-drop-zone {
     padding: 0 12px 12px;
 }
+
+
+.pb-page-root {
+    position: relative;
+    min-height: 200px;
+    outline: 1px dashed var(--border-strong-color);
+}
+
+.pb-page-root.selected {
+    outline: 2px solid var(--primary-color);
+}
+
+.pb-page-root-label {
+    position: absolute;
+    top: 0;
+    inset-inline-start: 0;
+    transform: translateY(-100%);
+    padding: 2px 8px;
+    border-radius: 4px 4px 0 0;
+    background: var(--primary-color);
+    color: var(--surface-color);
+    font-size: 11px;
+    font-weight: 600;
+    pointer-events: none;
+}

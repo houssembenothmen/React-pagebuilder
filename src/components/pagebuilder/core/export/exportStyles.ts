@@ -30,14 +30,6 @@ h1, h2, h3, h4, h5, h6 { line-height: 1.25; margin: 0 0 8px; }
 p { margin: 0 0 8px; }
 a { color: var(--primary-color); }
 button, input, textarea, select { font: inherit; }
-.pb-export {
-    max-width: 960px;
-    margin: 0 auto;
-    padding: 32px 24px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
 @media (max-width: 640px) {
     .pb-export { padding: 20px 16px; gap: 16px; }
 }
